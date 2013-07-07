@@ -7,12 +7,13 @@
 //
 
 #import "PPViewController.h"
+#import "PPRelView.h"
 
 
 @interface PPViewController ()
 
-@property (weak, nonatomic) UIView *row1;
-@property (weak, nonatomic) UIView *row2;
+@property (weak, nonatomic) PPRelView *row1;
+@property (weak, nonatomic) PPRelView *row2;
 
 @end
 
@@ -24,74 +25,13 @@
     [super viewDidLoad];
 	NSLog(@"Starting");
 	
-	// row 1
-	UILabel *lbl1 = [UILabel new];
-	lbl1.translatesAutoresizingMaskIntoConstraints = NO;
-	lbl1.numberOfLines = 0;
-	lbl1.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-	lbl1.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.25f];
-	lbl1.text = @"This is some text I want to place";
+	// add rows
+	self.row1 = [self addRowWithText:@"This is some text I want to place" buttonText:@"Insert" to:self.view before:nil orAfter:nil];
+	[((UIButton *)[_row1 viewWithTag:2]) addTarget:self action:@selector(insert:) forControlEvents:UIControlEventTouchUpInside];
 	
-	UIButton *btn1 = [UIButton new];
-	btn1.translatesAutoresizingMaskIntoConstraints = NO;
-	btn1.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.25f];
-	[btn1 setTitle:@"Insert" forState:UIControlStateNormal];
-	[btn1 addTarget:self action:@selector(insert:) forControlEvents:UIControlEventTouchUpInside];
+	self.row2 = [self addRowWithText:@"And this is more text, to be placed at the very bottom of this growing list" buttonText:@"Last" to:self.view before:nil orAfter:_row1];
 	
-	UIView *row1 = [UIView new];
-	row1.translatesAutoresizingMaskIntoConstraints = NO;
-	row1.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.25f];
-	[row1 addSubview:lbl1];
-	[row1 addSubview:btn1];
-	[self.view addSubview:row1];
-	self.row1 = row1;
-									
-	NSArray *cTop1 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-44-[row1(>=lbl1,>=btn1)]" options:0 metrics:nil views:@{@"row1": row1, @"lbl1": lbl1, @"btn1": btn1}];
-	NSArray *cRow1 = [NSLayoutConstraint constraintsWithVisualFormat:@"|[row1]|" options:0 metrics:nil views:@{@"row1": row1}];
-	NSLayoutConstraint *cBtn1 = [NSLayoutConstraint constraintWithItem:btn1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.f constant:44.f];
-	NSArray *constr1 = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[lbl1]-[btn1(100)]-|"
-															   options:NSLayoutFormatAlignAllTop
-															   metrics:nil
-																 views:@{@"lbl1": lbl1, @"btn1": btn1}];
-	[self.view addConstraints:cTop1];
-	[self.view addConstraints:cRow1];
-	[btn1 addConstraint:cBtn1];
-	[row1 addConstraints:constr1];
-	
-	// row 2
-	UILabel *lbl2 = [UILabel new];
-	lbl2.translatesAutoresizingMaskIntoConstraints = NO;
-	lbl2.numberOfLines = 0;
-	lbl2.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-	lbl2.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.25f];
-	lbl2.text = @"And this is more text, to be placed at the very bottom of this growing list";
-	
-	UIButton *btn2 = [UIButton new];
-	btn2.translatesAutoresizingMaskIntoConstraints = NO;
-	btn2.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.25f];
-	[btn2 setTitle:@"Last" forState:UIControlStateNormal];
-	
-	UIView *row2 = [UIView new];
-	row2.translatesAutoresizingMaskIntoConstraints = NO;
-	row2.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.25f];
-	[row2 addSubview:lbl2];
-	[row2 addSubview:btn2];
-	[self.view addSubview:row2];
-	self.row2 = row2;
-	
-	NSArray *cTop2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[row1]-[row2(>=lbl2,>=btn2)]" options:0 metrics:nil views:@{@"row1": row1, @"row2": row2, @"lbl2": lbl2, @"btn2": btn2}];
-	NSArray *cRow2 = [NSLayoutConstraint constraintsWithVisualFormat:@"|[row2]|" options:0 metrics:nil views:@{@"row2": row2}];
-	NSLayoutConstraint *cBtn2 = [NSLayoutConstraint constraintWithItem:btn2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.f constant:44.f];
-	NSArray *constr2 = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[lbl2]-[btn2(100)]-|"
-															   options:NSLayoutFormatAlignAllTop
-															   metrics:nil
-																 views:@{@"lbl2": lbl2, @"btn2": btn2}];
-	[self.view addConstraints:cTop2];
-	[self.view addConstraints:cRow2];
-	[btn2 addConstraint:cBtn2];
-	[row2 addConstraints:constr2];
-	
-	NSLog(@"%@", self.view.constraints);
+	NSLog(@"%@", _row2.constraints);
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -103,52 +43,84 @@
 - (void)insert:(id)sender
 {
 	NSLog(@"Adding a row");
-	UILabel *lbl = [UILabel new];
+	[self addRowWithText:@"A row that I just added" buttonText:@"Row" to:self.view before:_row2 orAfter:nil];
+	NSLog(@"Added");
+	
+	[UIView animateWithDuration:0.2 animations:^{
+		[self.view layoutIfNeeded];
+	}];
+}
+
+
+- (PPRelView *)addRowWithText:(NSString *)text buttonText:(NSString *)btnText to:(UIView *)parent before:(PPRelView *)before orAfter:(PPRelView *)after
+{
+	UIView *rel = before ? before : after;
+	UILabel *lbl = [[UILabel alloc] initWithFrame:[rel viewWithTag:1].frame];
+	lbl.tag = 1;
 	lbl.translatesAutoresizingMaskIntoConstraints = NO;
 	lbl.numberOfLines = 0;
 	lbl.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 	lbl.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.25f];
-	lbl.text = @"So, this row has been inserted. Cool, aint't it?";
+	lbl.text = text;
 	
-	UIButton *btn = [UIButton new];
+	UIButton *btn = [[UIButton alloc] initWithFrame:[rel viewWithTag:2].frame];
+	btn.tag = 2;
 	btn.translatesAutoresizingMaskIntoConstraints = NO;
 	btn.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.25f];
-	[btn setTitle:@"Row" forState:UIControlStateNormal];
+	[btn setTitle:btnText forState:UIControlStateNormal];
 	
-	UIView *row = [UIView new];
+	PPRelView *row = [[PPRelView alloc] initWithFrame:rel.frame];
+	row.previous = before ? before.previous : after;
 	row.translatesAutoresizingMaskIntoConstraints = NO;
 	row.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.25f];
 	[row addSubview:lbl];
 	[row addSubview:btn];
-	[self.view addSubview:row];
+	[parent addSubview:row];
 	
-	NSArray *cTop = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[row1]-[row(>=lbl,>=btn)]" options:0 metrics:nil views:@{@"row1": _row1, @"row": row, @"lbl": lbl, @"btn": btn}];
+	// row width
 	NSArray *cRow = [NSLayoutConstraint constraintsWithVisualFormat:@"|[row]|" options:0 metrics:nil views:@{@"row": row}];
-	NSLayoutConstraint *cBtn = [NSLayoutConstraint constraintWithItem:btn attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.f constant:44.f];
-	NSArray *cRowInner = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[lbl]-[btn(100)]-|"
-															   options:NSLayoutFormatAlignAllTop
-															   metrics:nil
-																 views:@{@"lbl": lbl, @"btn": btn}];
-	[self.view addConstraints:cTop];
-	[self.view addConstraints:cRow];
-	[btn addConstraint:cBtn];
-	[row addConstraints:cRowInner];
-	NSLog(@"Did add, update lower row");
 	
-	NSArray *old = [_row2 constraintsAffectingLayoutForAxis:UILayoutConstraintAxisVertical];
-	for (NSLayoutConstraint *constr in old) {
-		if (_row2 == constr.firstItem && NSLayoutAttributeTop == constr.firstAttribute) {
-			[self.view removeConstraint:constr];
-			break;
-		}
+	// row top margin and height
+	NSArray *cTop = nil;
+	if (row.previous) {
+		cTop = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[row1]-[row(>=lbl,>=btn)]" options:0 metrics:nil views:@{@"row1": row.previous, @"row": row, @"lbl": lbl, @"btn": btn}];
+	}
+	else {
+		cTop = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-44-[row(>=lbl,>=btn)]" options:0 metrics:nil views:@{@"row": row, @"lbl": lbl, @"btn": btn}];
 	}
 	
-	[self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[row1]-[row2]" options:0 metrics:nil views:@{@"row1": row, @"row2": _row2}]];
-	[self.view setNeedsUpdateConstraints];
-	[UIView animateWithDuration:0.2 animations:^{
-		[self.view layoutIfNeeded];
-	}];
-	NSLog(@"Added");
+	// label and button alignment
+	NSArray *cRowInner = [NSLayoutConstraint constraintsWithVisualFormat:@"|-[lbl]-[btn(100)]-|"
+																 options:NSLayoutFormatAlignAllCenterY
+																 metrics:nil
+																   views:@{@"lbl": lbl, @"btn": btn}];
+	NSLayoutConstraint *cRowCenter = [NSLayoutConstraint constraintWithItem:lbl
+																  attribute:NSLayoutAttributeCenterY
+																  relatedBy:NSLayoutRelationEqual
+																	 toItem:lbl.superview
+																  attribute:NSLayoutAttributeCenterY
+																 multiplier:1.f constant:0.f];
+	[parent addConstraints:cTop];
+	[parent addConstraints:cRow];
+	[row addConstraints:cRowInner];
+	[row addConstraint:cRowCenter];
+	
+	// move down the lower row
+	if (before) {
+		before.previous = row;
+		NSArray *old = [before constraintsAffectingLayoutForAxis:UILayoutConstraintAxisVertical];
+		for (NSLayoutConstraint *constr in old) {
+			if (before == constr.firstItem && NSLayoutAttributeTop == constr.firstAttribute) {
+				[parent removeConstraint:constr];
+				break;
+			}
+		}
+		
+		[parent addConstraint:[NSLayoutConstraint constraintWithItem:before attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:row attribute:NSLayoutAttributeBottom multiplier:1.f constant:8.f]];
+		[parent setNeedsUpdateConstraints];
+	}
+	
+	return row;
 }
 
 

@@ -21,6 +21,7 @@
 		EE14B24417890B3F0083D418 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE14B22617890B3F0083D418 /* UIKit.framework */; };
 		EE14B24C17890B3F0083D418 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EE14B24A17890B3F0083D418 /* InfoPlist.strings */; };
 		EE14B24E17890B3F0083D418 /* FontTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE14B24D17890B3F0083D418 /* FontTestTests.m */; };
+		EED9BFA517892B6B0014D08A /* PPRelView.m in Sources */ = {isa = PBXBuildFile; fileRef = EED9BFA417892B6B0014D08A /* PPRelView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		EE14B24B17890B3F0083D418 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EE14B24D17890B3F0083D418 /* FontTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FontTestTests.m; sourceTree = "<group>"; };
 		EE14B257178925F60083D418 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		EED9BFA317892B6B0014D08A /* PPRelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPRelView.h; sourceTree = "<group>"; };
+		EED9BFA417892B6B0014D08A /* PPRelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPRelView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				EE14B23417890B3F0083D418 /* Main.storyboard */,
 				EE14B23717890B3F0083D418 /* PPViewController.h */,
 				EE14B23817890B3F0083D418 /* PPViewController.m */,
+				EED9BFA317892B6B0014D08A /* PPRelView.h */,
+				EED9BFA417892B6B0014D08A /* PPRelView.m */,
 				EE14B23A17890B3F0083D418 /* Images.xcassets */,
 				EE14B22917890B3F0083D418 /* Supporting Files */,
 			);
@@ -252,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EED9BFA517892B6B0014D08A /* PPRelView.m in Sources */,
 				EE14B23317890B3F0083D418 /* PPAppDelegate.m in Sources */,
 				EE14B23917890B3F0083D418 /* PPViewController.m in Sources */,
 				EE14B22F17890B3F0083D418 /* main.m in Sources */,
@@ -457,6 +463,7 @@
 				EE14B25317890B3F0083D418 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE14B25417890B3F0083D418 /* Build configuration list for PBXNativeTarget "FontTestTests" */ = {
 			isa = XCConfigurationList;
@@ -465,6 +472,7 @@
 				EE14B25617890B3F0083D418 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
