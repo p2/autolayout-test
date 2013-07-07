@@ -102,6 +102,8 @@
 		oldNext.previous = _previous;
 	}
 	
+	self.previous = nil;
+	self.next = nil;
 	self.topConstraint = nil;
 	self.widthConstraints = nil;
 	
