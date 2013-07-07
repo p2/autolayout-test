@@ -12,5 +12,27 @@
 @implementation PPRelView
 
 
+- (void)setPrevious:(PPRelView *)previous
+{
+	if (previous != _previous) {
+		PPRelView *oldPrev = (self == _previous.next) ? _previous : nil;
+		
+		_previous = previous;
+		previous.next = self;
+		oldPrev.next = nil;
+	}
+}
+
+- (void)setNext:(PPRelView *)next
+{
+	if (next != _next) {
+		PPRelView *oldNext = (self == _next.previous) ? _next : nil;
+		
+		_next = next;
+		next.previous = self;
+		oldNext.previous = nil;
+	}
+}
+
 
 @end

@@ -12,5 +12,6 @@
 @interface PPRelView : UIView
 
 @property (weak, nonatomic) PPRelView *previous;
+@property (weak, nonatomic) PPRelView *next;
 
 @end
