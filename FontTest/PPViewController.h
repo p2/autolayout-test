@@ -10,4 +10,10 @@
 
 @interface PPViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIView *header;
+@property (weak, nonatomic) IBOutlet UISlider *slider1;
+@property (weak, nonatomic) IBOutlet UISlider *slider2;
+
+- (IBAction)pop:(id)sender;
+
 @end

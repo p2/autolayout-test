@@ -25,7 +25,7 @@
     [super viewDidLoad];
 	
 	// add rows
-	self.row1 = [self addRowWithText:@"This is some text I want to place" buttonText:@"Insert" to:self.view after:nil];
+	self.row1 = [self addRowWithText:@"This is some text I want to place" buttonText:@"Insert" to:self.view after:_header];
 	[_row1.button addTarget:self action:@selector(insert:) forControlEvents:UIControlEventTouchUpInside];
 	
 	self.row2 = [self addRowWithText:@"And this is more text, to be placed at the very bottom of this growing list" buttonText:@"Last" to:self.view after:_row1];
@@ -40,6 +40,22 @@
 
 
 #pragma mark - Actions
+- (IBAction)pop:(id)sender
+{
+	PPRelView *row = [self addRowWithText:@"A row that I just added" buttonText:@"Remove" to:self.view after:_row2.previous];
+	[row.button addTarget:self action:@selector(remove:) forControlEvents:UIControlEventTouchUpInside];
+	
+	[UIView animateWithDuration:0.4
+						  delay:0.0
+		 usingSpringWithDamping:_slider1.value
+		  initialSpringVelocity:_slider2.value
+						options:0
+					 animations:^{
+						 [self.view layoutIfNeeded];
+					 }
+					 completion:NULL];
+}
+
 - (void)insert:(id)sender
 {
 	PPRelView *row = [self addRowWithText:@"A row that I just added" buttonText:@"Remove" to:self.view after:_row2.previous];
@@ -54,9 +70,15 @@
 {
 	[sender.superview removeFromSuperview];
 	
-	[UIView animateWithDuration:0.2 animations:^{
-		[self.view layoutIfNeeded];
-	}];
+	[UIView animateWithDuration:0.4
+						  delay:0.0
+		 usingSpringWithDamping:_slider1.value
+		  initialSpringVelocity:_slider2.value
+						options:0
+					 animations:^{
+						 [self.view layoutIfNeeded];
+					 }
+					 completion:NULL];
 }
 
 
